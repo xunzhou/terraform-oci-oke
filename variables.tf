@@ -293,3 +293,25 @@ variable "install_calico" {
   description = "whether to install calico for network pod security policy"
   default     = false
 }
+
+# prometheus operator
+
+variable "install_prometheus" {
+  description = "whether to deploy the prometheus operator"
+  default = false
+}
+
+variable "prometheus_helm_release_name" {
+  description = "name of helm release"
+  default     = "prometheus"
+}
+
+variable "prometheus_namespace" {
+  description = "where to deploy the operator"
+  default     = "monitoring"
+}
+
+variable "prometheus_chart_version" {
+  description = "prometheus operator chart version to use"
+  default     = "5.5.0"
+}

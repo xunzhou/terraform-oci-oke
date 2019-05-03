@@ -143,5 +143,23 @@ module "oke" {
 
   # calico
   calico_version = "${var.calico_version}"
-  install_calico = "${var.install_calico}" 
+  install_calico = "${var.install_calico}"
+}
+
+module "prometheus" {
+  source = "./modules/prometheus"
+
+  # ssh keys
+  ssh_private_key_path = "${var.ssh_private_key_path}"
+
+  # bastion
+  bastion_public_ip      = "${module.base.bastion_public_ip}"
+  create_bastion         = "${var.create_bastion}"
+  image_operating_system = "${var.image_operating_system}"
+
+  # prometheus-operator
+  install_prometheus           = "${var.install_prometheus}"
+  prometheus_helm_release_name = "${var.prometheus_helm_release_name}"
+  prometheus_namespace         = "${var.prometheus_namespace}"
+  prometheus_chart_version     = "${var.prometheus_chart_version}"
 }
