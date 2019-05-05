@@ -1,3 +1,6 @@
+# Copyright 2017, 2019 Oracle Corporation and/or affiliates.  All rights reserved.
+# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+
 resource "helm_release" "prometheus" {
   chart      = "prometheus-operator"
   depends_on = ["null_resource.is_worker_active"]
@@ -37,5 +40,5 @@ resource "helm_release" "prometheus" {
     value = "false"
   }
 
-  count = "${(var.install_prometheus == true) ? 1 : 0}"
+  count = "${(var.create_bastion == true && var.install_prometheus == true) ? 1 : 0}"
 }

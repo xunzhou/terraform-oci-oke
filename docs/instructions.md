@@ -13,6 +13,8 @@
 [oci]: https://cloud.oracle.com/cloud-infrastructure
 [oci console]: https://console.us-phoenix-1.oraclecloud.com/
 [oke]: https://docs.us-phoenix-1.oraclecloud.com/Content/ContEng/Concepts/contengoverview.htm
+[prometheus]: https://prometheus.io/
+[prometheus operator]: https://github.com/helm/charts/tree/master/stable/prometheus-operator
 [terraform]: https://www.terraform.io
 [terraform download]: https://www.terraform.io/downloads.html
 [terraform options]: ./terraformoptions.md
@@ -326,6 +328,7 @@ $ kubectl get nodes
 
 ### Addons
 - [helm][helm] can also now be installed on the bastion instances by setting the install_helm=true in terraform.tfvars
+- [Prometheus Operator][prometheus operator] can now also be installed into the cluster for cluster monitoring. Set install_prometheus=true in your terraform.tfvars. It requires tiller_enabled to be set to true.
 
 ## Accessing Dashboards
 

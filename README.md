@@ -8,6 +8,8 @@
 [networks]:https://erikberg.com/notes/networks.html
 [oci]: https://cloud.oracle.com/cloud-infrastructure
 [oke]: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
+[prometheus]: https://prometheus.io/
+[prometheus operator]: https://github.com/helm/charts/tree/master/stable/prometheus-operator
 [terraform]: https://www.terraform.io
 [terraform example]: ./terraform.tfvars.example
 [terraform options]: ./docs/terraformoptions.md
@@ -114,6 +116,8 @@ $ terraform apply
     - optional installation and configuration of helm on the bastion instances
     - choice of helm version
     - upgrade of the running tiller on the cluster
+- [Prometheus][prometheus]:
+    - optional installation and configuration of Prometheus via the [Prometheus Operator][prometheus operator]
 
 ## Documentation
 

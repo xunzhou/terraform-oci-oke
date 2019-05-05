@@ -91,3 +91,11 @@
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
 | install_calico                        | Whether to install calico as network policy                   |     true/false       |  false                 |
 | calico_version                        | Version of calico as network policy                           |                      |  3.6                   |
+
+## Prometheus
+| Option                                | Description                                   | Values                    | Default               | 
+| -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
+| install_prometheus                    | Whether to install Prometheus Operator for cluster monitoring. Requires tiller_enabled=true             |     true/false        |  false                 |
+| prometheus_helm_release_name          | helm release name of the Prometheus operator  |   String                  |  prometheus                   |
+| prometheus_namespace                  | The namespace in which to install the Prometheus Operator. If the namespace does not exist, it will be created.   |   String    |   monitoring   |
+| prometheus_chart_version              | The version of the Prometheus Operator chart   |            | 5.5.0       | 

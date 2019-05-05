@@ -130,3 +130,13 @@ install_helm = "true"
 calico_version = "3.6"
 
 install_calico = "false"
+
+# prometheus-operator
+
+install_prometheus           = "true"
+
+prometheus_helm_release_name = "prom"
+
+prometheus_namespace         = "monitoring"
+
+prometheus_chart_version     = "5.5.0"

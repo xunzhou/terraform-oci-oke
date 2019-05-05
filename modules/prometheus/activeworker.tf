@@ -2,6 +2,10 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 resource null_resource "is_worker_active" {
+  triggers = {
+    bastion_public_ip = "${var.bastion_public_ip}"
+  }
+
   connection {
     host        = "${var.bastion_public_ip}"
     private_key = "${file(var.ssh_private_key_path)}"
@@ -12,7 +16,7 @@ resource null_resource "is_worker_active" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f $HOME/node.active ]; do sleep 10; done"
+      "while [ ! -f $HOME/node.active ]; do sleep 10; done",
     ]
   }
 
