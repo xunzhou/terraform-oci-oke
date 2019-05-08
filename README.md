@@ -80,11 +80,11 @@ $ terraform apply
     - plan your scalability, HA and failover capabilities
 - Optional co-located and pre-configured public bastion instance. This helps execute kubectl commands faster and limit local dependencies. The bastion instance has the following configurable features:
     - oci-cli installed and upgraded
-    - kubectl installed and pre-configured
+    - kubectl installed and pre-configured with bash alias
     - kubeconfig generation
-    - [helm][helm] installed and pre-configured (see [helm][instructions])
+    - [helm][helm] installed and pre-configured (see [helm][instructions]) with helm alias
     - convenient output of how to access the bastion instances
-    - choice of AD location for the bastion instance(s) to avoid problems with service limits/shapes, particularly when using trial accounts
+    - choice of AD location for the bastion instance to avoid problems with service limits/shapes, particularly when using trial accounts
 - Automatic creation of [OKE pre-requisites][example network resource configuration]:
     - 3 worker subnets with their corresponding security lists, ingress and egress rules
     - 3 load balancer subnets with their corresponding security lists, ingress and egress rules
@@ -101,7 +101,7 @@ $ terraform apply
     - number of node pools to be created
     - choice of node pool [topology][topology] i.e. whether to make a node pool span 2 or 3 subnets (effectively make a nodepool span 2 or 3 ADs within a region)
     - number of worker nodes per subnets
-    - fair distribution of node pools across the ADs in the region when choosing [2 subnets topology][topology] so that node pools are not concentrated in some ADs only
+    - fair distribution of node pools across the ADs in the region when choosing [2 subnets topology][topology] so that worker nodes are not concentrated in some ADs only
     - programmable node pool prefix
     - configurable worker node shape
 - Optional K8s Network Policy:

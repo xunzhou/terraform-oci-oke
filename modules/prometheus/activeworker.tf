@@ -20,5 +20,5 @@ resource null_resource "is_worker_active" {
     ]
   }
 
-  count = "${(var.create_bastion == true) ? 1 : 0}"
+  count = "${(var.create_bastion == true && var.install_prometheus == true) ? 1 : 0}"
 }

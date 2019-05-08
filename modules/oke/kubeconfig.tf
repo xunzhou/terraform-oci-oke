@@ -15,16 +15,16 @@ resource "null_resource" "create_local_kubeconfig" {
   provisioner "local-exec" {
     command = "mkdir generated"
   }
-
-  provisioner "local-exec" {
-    command = "touch generated/kubeconfig"
-  }
 }
 
 resource "local_file" "kube_config_file" {
-  content    = "${data.oci_containerengine_cluster_kube_config.kube_config.content}"
-  depends_on = ["null_resource.create_local_kubeconfig", "oci_containerengine_cluster.k8s_cluster"]
-  filename   = "${path.root}/generated/kubeconfig"
+  sensitive_content = "${data.oci_containerengine_cluster_kube_config.kube_config.content}"
+  depends_on        = ["null_resource.create_local_kubeconfig", "oci_containerengine_cluster.k8s_cluster"]
+  filename          = "${path.root}/generated/kubeconfig"
+
+  lifecycle {
+    ignore_changes = ["sensitive_content"]
+  }
 }
 
 data "template_file" "install_kubectl" {
@@ -36,6 +36,10 @@ data "template_file" "install_kubectl" {
 }
 
 resource "null_resource" "install_kubectl_bastion" {
+  triggers = {
+    bastion_ocid = "${var.bastion_ocid}"
+  }
+
   connection {
     host        = "${var.bastion_public_ip}"
     private_key = "${file(var.ssh_private_key_path)}"
@@ -60,6 +64,10 @@ resource "null_resource" "install_kubectl_bastion" {
 }
 
 resource "null_resource" "write_kubeconfig_bastion" {
+  triggers = {
+    bastion_ocid = "${var.bastion_ocid}"
+  }
+
   connection {
     host        = "${var.bastion_public_ip}"
     private_key = "${file(var.ssh_private_key_path)}"

@@ -298,7 +298,7 @@ variable "install_calico" {
 
 variable "install_prometheus" {
   description = "whether to deploy the prometheus operator"
-  default = false
+  default     = false
 }
 
 variable "prometheus_helm_release_name" {

@@ -5,6 +5,7 @@
 [cidrsubnet]:http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 [example network resource configuration]:https://docs.us-phoenix-1.oraclecloud.com/Content/ContEng/Concepts/contengnetworkconfigexample.htm
 [helm]:https://www.helm.sh/
+[helm download]: https://github.com/helm/helm/releases
 [image ocids]:https://docs.cloud.oracle.com/iaas/images/oraclelinux-7x/
 [instance_principal]:https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
 [kubernetes]: https://kubernetes.io/
@@ -20,11 +21,10 @@
 [terraform options]: ./terraformoptions.md
 [terraform oke sample]: https://github.com/oracle/terraform-provider-oci/tree/master/docs/examples/container_engine
 [topology]: ./topology.md
-[todo]: ./todo.md
 
 ## Install Terraform
 
-1. [Download Terraform][terraform download]. You need version 0.11.11
+1. [Download Terraform][terraform download]. You need version 0.11.11+
 
 2. Extract the terraform binary to a location in your path
 
@@ -33,6 +33,19 @@
     $ sudo cp terraform /usr/local/bin
     $ terraform -v
     Terraform v0.11.11
+    ```
+## Install helm (Optional)
+
+You need to install helm locally only if you will be enabling Prometheus. See below.
+
+1. [Download][download helm] the helm binary
+
+2. Extract the helm binary to a location in your path
+
+    ```
+    tar zxvf helm-v2.13.1-linux-amd64.tar.gz
+    mv helm /usr/local/bin
+    helm version
     ```
 
 ## Generate ssh keys
@@ -187,9 +200,7 @@ image_ocid = "ocid1.image.oc1.phx.aaaaaaaagtiusgjvzurghktkgphjuuky2q6qjwvsstzbhy
 ```
 
 #### oci-cli
-oci-cli is pre-configured for the opc user on the bastion instances. To use, set the create_bastion to true and pick an availability domain (1,2,3)
-
-Enable 1 of the bastion instances in terraform.tfvars in the 'availability_domains' variable e.g.
+oci-cli is pre-configured for the opc user on the bastion instances. To use the bastion, set the `create_bastion=true` and pick an availability domain (1,2,3) e.g. the configuration below will create the bastion host in AD1.
 
 ```
 create_bastion = "true"
@@ -199,7 +210,9 @@ availability_domains = {
 }
 ```
 
-You can do this any time i.e. either at the beginning or after the cluster has been created. After the instance is provisioned, terraform will output the ip address of the bastion instance(s):
+You can do this any time i.e. either at the beginning or after the cluster has been created. However, note that there are certain features that require the bastion to be provisioned e.g. ocirsecret, calico, prometheus-operator.
+
+After the instance is provisioned, terraform will output the ip address of the bastion instance(s):
 
 ```
 ssh_to_bastion = ssh -i /home/oracle/test/oci_rsa.pem opc@XXX.XXX.XXX.XXX,
@@ -216,9 +229,11 @@ You can turn off the bastion instance anytime by setting the above value to fals
 
 Any user who has access to the instance (who can SSH to the instance), automatically inherits the privileges granted to the instance. Before you enable this feature, ensure that you know who can access it, and that they should be authorized with the permissions you are granting to the instance.
 
-If you enable this feature, by default, the bastion has privileges to all resources in the compartment. You can also turn on and off the feature at any time without impact on the bastion itself.
+_If you enable this feature, by default, the bastion will have privileges to all resources in the compartment. **You should carefully evaluate if this meets your security standards**_. As such, it is turned off by default
 
-To enable, set enable_instance_principal to true:
+You can also turn it on and off at any time without impact on the bastion itself.
+
+To enable, set `enable_instance_principal=true`:
 
 ```
 enable_instance_principal = "true"
@@ -238,7 +253,7 @@ kubectl is pre-installed on the bastion instance:
 $ kubectl get nodes
 ```
 
-### OKE Networking
+### OKE Workers Networking
 All subnets are programmable and can be controlled using the vcn_cidr, newbits and subnets variables. This can help you control the size and number of subnets that can be created within the VCNs e.g.
   
 ```
@@ -314,7 +329,7 @@ OKE Parameters - see terraform.tfvars.example. Most of them are self-explanatory
    
    - Number of worker nodes per node pools are programmable. This is controlled by the node_pool_quantity_per_subnet variable.
 
-   - Setting node_pools = "2" and node_pool_quantity_per_subnet = "2" and nodepool_topology = "2" will create a cluster of 8 worker nodes. Similarly, corresponding values of 3, 2, 2 will create a cluster of 12 worker nodes.
+   - Setting `node_pools = "2"` and `node_pool_quantity_per_subnet = "2"` and `nodepool_topology = "2"` will create a cluster of 8 worker nodes. Similarly, corresponding values of 3, 2, 2 will create a cluster of 12 worker nodes.
    
    - Review [Node pool topology][topology] to understand how these 3 parameters impact your deployment.
 
@@ -327,14 +342,25 @@ $ kubectl get nodes
 ```
 
 ### Addons
-- [helm][helm] can also now be installed on the bastion instances by setting the install_helm=true in terraform.tfvars
-- [Prometheus Operator][prometheus operator] can now also be installed into the cluster for cluster monitoring. Set install_prometheus=true in your terraform.tfvars. It requires tiller_enabled to be set to true.
+
+- [helm][helm] can also be installed on the bastion instances by setting the `install_helm=true` in terraform.tfvars
+
+- [Prometheus Operator][prometheus operator] can now also be installed into the cluster for cluster monitoring. Set `install_prometheus=true` in your terraform.tfvars. It also requires setting `tiller_enabled=true`.
+
+### Prometheus 
+
+1. Ensure you have installed the helm client on the same host where you will be running terraform.
+
+2. Create the cluster first by setting `tiller_enabled=true` and `install_prometheus='false'` and running `terraform apply`.
+
+3. Once, the cluster is created, set `install_prometheus="true"` and run `terraform apply` again to install the Prometheus Operator.
+
 
 ## Accessing Dashboards
 
 ### Default Kubernetes Dashboard
 
-1. Ensure you've enabled the Kubernetes Dashboard has been deployed by setting dashboard_enabled = 'true' in your terraform.tfvars file. See the [Terraform Configuration Parameters for OKE][terraform options].
+1. Ensure you have enabled the Kubernetes Dashboard has been deployed by setting `dashboard_enabled="true"` in your terraform.tfvars file. See the [Terraform Configuration Parameters for OKE][terraform options].
 
 2. Access the dashboard service:
 
@@ -344,11 +370,38 @@ $ kubectl get nodes
 
 3. Open the [Kubernetes Dashboard][kubernetes dashboard] in the browser and login with the kubeconfig file in the generated folder
 
+### Prometheus
+
+1. Access the Prometheus Expression Browser:
+
+    ```
+    $ scripts/prometheus.sh
+    ```
+
+2. Open the Prometheus Expression Browser in the browser at http://localhost:9090
+
+### Grafana 
+
+1. Grafana is automatically installed when you run `terraform apply` with `install_prometheus="true"` in your terraform.tfvars file.
+
+2. Grafana is generated with the default password (prom-operator). It's recommended you change the default password.
+
+3. Access the Grafana Dashboard:
+
+    ```
+    $ scripts/grafana.sh
+    ```
+4. The username and password of Grafana will be printed in the terminal.
+
+5. Open the Grafana in the browser at http://localhost:3000
+
 ### Service URLs to bookmark
 
 | Service                   | URL                                                                                               |
 | -----------------------   | -----------------------------------------------------------------------------------------------   |
 | Default K8s Dashboard     | http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/   |
+| Prometheus                | http://localhost:9090                                                                             |
+| Grafana                   | http://localhost:3000                                                                             |
 
 ## Destroying the cluster
 
@@ -358,11 +411,17 @@ Run terraform destroy:
 $ terraform destroy
 ```
 
+### Prometheus
+
+- [Prometheus][prometheus] can be installed in the  OKE cluster using the [Prometheus Operator][prometheus operator].
+- The Prometheus ServiceMonitors are configured to target all ServiceMonitors in all namespaces by default.
+- A Grafana instance is also provisioned.
+
 ## Known Issues
 
 - The subnet allocation algorithm must be tested more thoroughly for the 2-subnet node pool topology. At the moment, ensure all 3 worker subnets are enabled to avoid unknown problems.
 
-- You need to be part of Administrators' group in order to use instance_principals
+- Your user must be part of Administrators' group in order to use instance_principal. If your user is not, turn off instance_principal
 
 - By default, the cluster is provisioned for 3-AD regions. For single AD regions, open the file modules/oke/cluster.tf and swap the service_lb_subnet_ids as follows:
 

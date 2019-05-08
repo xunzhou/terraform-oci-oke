@@ -8,6 +8,13 @@ provider "helm" {
 }
 
 data "helm_repository" "stable" {
-    name = "stable"
-    url = "https://kubernetes-charts.storage.googleapis.com"
+  name = "stable"
+  url  = "https://kubernetes-charts.storage.googleapis.com"
+}
+
+resource "null_resource" "helm_init" {
+  provisioner "local-exec" {
+    command = "helm init --client-only"
+  }
+  count = "${var.install_prometheus == true ? 1 : 0}"
 }

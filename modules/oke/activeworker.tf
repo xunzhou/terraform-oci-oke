@@ -14,7 +14,10 @@ data "template_file" "check_worker_node_status" {
 }
 
 resource null_resource "is_worker_active" {
-  # depends_on = ["null_resource.write_check_worker_script", "oci_containerengine_cluster.k8s_cluster"]
+  triggers = {
+    bastion_ocid = "${var.bastion_ocid}"
+  }
+  
   connection {
     host        = "${var.bastion_public_ip}"
     private_key = "${file(var.ssh_private_key_path)}"

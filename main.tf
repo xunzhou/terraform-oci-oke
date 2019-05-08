@@ -102,6 +102,7 @@ module "oke" {
 
   # bastion
   bastion_public_ip         = "${module.base.bastion_public_ip}"
+  bastion_ocid              = "${module.base.bastion_id}"
   create_bastion            = "${var.create_bastion}"
   enable_instance_principal = "${var.enable_instance_principal}"
   image_operating_system    = "${var.image_operating_system}"
@@ -158,8 +159,8 @@ module "prometheus" {
   image_operating_system = "${var.image_operating_system}"
 
   # prometheus-operator
-  install_prometheus           = "${var.install_prometheus}"
-  prometheus_helm_release_name = "${var.prometheus_helm_release_name}"
-  prometheus_namespace         = "${var.prometheus_namespace}"
-  prometheus_chart_version     = "${var.prometheus_chart_version}"
+  install_prometheus                = "${var.install_prometheus}"
+  prometheus_helm_release_name      = "${var.prometheus_helm_release_name}"
+  prometheus_namespace              = "${var.prometheus_namespace}"
+  prometheus_chart_version          = "${var.prometheus_chart_version}"
 }

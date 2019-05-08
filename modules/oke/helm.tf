@@ -12,6 +12,10 @@ data "template_file" "install_helm" {
 }
 
 resource null_resource "install_helm_bastion" {
+  triggers = {
+    bastion_ocid = "${var.bastion_ocid}"
+  }
+
   connection {
     host        = "${var.bastion_public_ip}"
     private_key = "${file(var.ssh_private_key_path)}"

@@ -32,6 +32,8 @@ variable "availability_domains" {
 # bastion
 variable "bastion_public_ip" {}
 
+variable "bastion_ocid" {}
+
 variable "create_bastion" {}
 
 variable "enable_instance_principal" {}
