@@ -133,7 +133,7 @@ install_calico = "false"
 
 # prometheus-operator
 
-install_prometheus           = "true"
+install_prometheus           = "false"
 
 prometheus_helm_release_name = "prom"
 

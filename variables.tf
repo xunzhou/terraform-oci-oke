@@ -303,7 +303,7 @@ variable "install_prometheus" {
 
 variable "prometheus_helm_release_name" {
   description = "name of helm release"
-  default     = "prometheus"
+  default     = "prom"
 }
 
 variable "prometheus_namespace" {
