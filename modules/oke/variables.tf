@@ -112,3 +112,11 @@ variable "service_account" {
   })
 }
 
+#check worker node active
+variable "check_node_active" {
+  type = string
+}
+
+variable "reuse" {
+  type = bool
+}

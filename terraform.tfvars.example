@@ -22,8 +22,6 @@ ssh_public_key_path = ""
 
 # networking
 
-nat_gateway_enabled = true
-
 netnum = {
   bastion    = 32
   int_lb     = 16
@@ -39,81 +37,17 @@ newbits = {
   workers    = 2
 }
 
-vcn_cidr = "10.0.0.0/16"
-
-vcn_dns_label = "oke"
-
-vcn_name = "oke vcn"
-
-
-# bastion
-
-bastion_access = "ANYWHERE"
-
 bastion_enabled = true
-
-bastion_image_id = "Autonomous"
-
-bastion_notification_enabled = false
-
-bastion_notification_endpoint = "<email_address>"
-
-bastion_notification_protocol = "EMAIL"
-
-bastion_notification_topic= "bastion_server_notification"
-
-bastion_package_upgrade = false
-
-bastion_shape = "VM.Standard.E2.1"
-
-bastion_timezone = "Australia/Sydney"
 
 operator_enabled = true
 
-operator_image_id = "Oracle"
-
 operator_instance_principal = true
-
-operator_notification_enabled = false
-
-operator_notification_endpoint = ""
-
-operator_notification_protocol = "EMAIL"
-
-operator_notification_topic= "operator_server_notification"
-
-operator_package_upgrade = true
-
-operator_shape   = "VM.Standard.E2.1"
-
-operator_timezone= "Australia/Sydney"
 
 # availability_domains
 
 availability_domains = {
   bastion = 1
   operator  = 1
-}
-
-# tags
-
-tags = {
-  # vcn, bastion and operator tags are required
-  # add more tags in each as desired
-  vcn = {
-    # department = "finance"
-    environment = "dev"
-  }
-  bastion = {
-    # department  = "finance"
-    environment = "dev"
-    role        = "bastion"
-  }
-  operator = {
-    # department = "finance"
-    environment = "dev"
-    role        = "operator"
-  }
 }
 
 # oke
@@ -123,6 +57,8 @@ allow_node_port_access = false
 allow_worker_ssh_access = false
 
 cluster_name = "oke"
+
+check_node_active = "none"
 
 dashboard_enabled = false
 
@@ -136,7 +72,7 @@ node_pools = {
 
 node_pool_name_prefix = "np"
 
-node_pool_image_id = "NONE"
+node_pool_image_id = "none"
 
 node_pool_os = "Oracle Linux"
 
@@ -156,7 +92,7 @@ preferred_lb_subnets = "public"
 waf_enabled = false
 
 # ocir
-secret_id = ""
+secret_id = "none"
 
 email_address = ""
 
@@ -189,3 +125,25 @@ service_account_name = "kubeconfigsa"
 service_account_namespace = "kube-system"
 
 service_account_cluster_role_binding = ""
+
+# reuse existing vcn.If you are using base module below values can be derived from terraform output values.
+reuse = false
+
+vcn_id = 
+
+bastion_public_ip = 
+ 
+operator_private_ip = 
+
+ig_route_id = 
+
+nat_route_id = 
+ 
+#dynamic group name for instance principal
+dynamicgroup_name = 
+
+worker_dnslabel = "worker"
+
+lb_dnslabel = "publb"
+
+  
