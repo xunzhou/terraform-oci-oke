@@ -316,6 +316,12 @@ variable "admission_controller_options" {
   type        = map(bool)
 }
 
+variable "ad_names" {
+  description = "provide ad names used to create workers"
+  type = list(string)
+  default = []
+}
+
 variable "allow_node_port_access" {
   default     = false
   description = "Whether to allow access to NodePorts when worker nodes are deployed in public mode."

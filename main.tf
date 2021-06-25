@@ -85,7 +85,7 @@ module "oke" {
   label_prefix   = var.label_prefix
 
   # region parameters
-  ad_names = module.base.ad_names
+  ad_names = length(var.ad_names) == 0 ? module.base.ad_names : var.ad_names
   region   = var.region
 
   # ssh keys

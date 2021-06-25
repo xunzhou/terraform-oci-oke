@@ -60,3 +60,8 @@ output "kubeconfig" {
   description = "convenient command to set KUBECONFIG environment variable before running kubectl locally"
   value       = "export KUBECONFIG=generated/kubeconfig"
 }
+
+output "ad_names" {
+  description = "availability domain names"
+  value = module.base.ad_names
+}
