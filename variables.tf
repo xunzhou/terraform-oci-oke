@@ -330,12 +330,6 @@ variable "security_list_ids" {
     int_lb = list(string)
     pub_lb = list(string)
   })
-  default = {
-    cp = []
-    workers = []
-    int_lb = []
-    pub_lb = []
-  }
 }
 
 variable "allow_node_port_access" {
