@@ -65,3 +65,8 @@ output "ad_names" {
   description = "availability domain names"
   value = module.base.ad_names
 }
+
+output "security_list_ids" {
+  description = "security_list_ids object"
+  value = var.security_list_ids
+}

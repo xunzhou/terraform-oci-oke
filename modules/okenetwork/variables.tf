@@ -53,3 +53,11 @@ variable "waf_enabled" {
   type = bool
 }
 
+variable "security_list_ids" {
+  type = object({
+    cp = list(string)
+    workers = list(string)
+    int_lb = list(string)
+    pub_lb = list(string)
+  })
+}

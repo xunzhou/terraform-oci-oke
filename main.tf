@@ -74,6 +74,8 @@ module "network" {
   # waf integration
   waf_enabled = var.waf_enabled
 
+  security_list_ids = var.security_list_ids
+
 }
 
 # cluster creation for oke
@@ -87,6 +89,8 @@ module "oke" {
   # region parameters
   ad_names = length(var.ad_names) == 0 ? module.base.ad_names : var.ad_names
   region   = var.region
+
+  security_list_ids = var.security_list_ids
 
   # ssh keys
   oke_ssh_keys = local.oci_base_ssh_keys

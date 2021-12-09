@@ -10,6 +10,16 @@ variable "label_prefix" {}
 variable "ad_names" {
   type = list(string)
 }
+
+variable "security_list_ids" {
+  type = object({
+    cp = list(string)
+    workers = list(string)
+    int_lb = list(string)
+    pub_lb = list(string)
+  })
+}
+
 variable "region" {}
 
 # ssh keys

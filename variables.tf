@@ -322,6 +322,22 @@ variable "ad_names" {
   default = []
 }
 
+variable "security_list_ids" {
+  description = "Provide additional security list ids for subnets"
+  type = object({
+    cp = list(string)
+    workers = list(string)
+    int_lb = list(string)
+    pub_lb = list(string)
+  })
+  default = {
+    cp = []
+    workers = []
+    int_lb = []
+    pub_lb = []
+  }
+}
+
 variable "allow_node_port_access" {
   default     = false
   description = "Whether to allow access to NodePorts when worker nodes are deployed in public mode."
